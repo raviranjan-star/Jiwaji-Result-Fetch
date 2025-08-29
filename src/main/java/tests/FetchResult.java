@@ -32,11 +32,14 @@ public class FetchResult {
 			String number = driver.findElement(By.xpath("//th[text()='FINAL RESULT']/parent::tr/following-sibling::tr/td/following-sibling::td")).getText();
 			String final_res = driver.findElement(By.xpath("//td[text()='Result']/following-sibling::td")).getText();
 			String college = driver.findElement(By.xpath("//h5")).getText();
+			
 			if(collegeCap == null ) {
 				collegeCap=college;
-				System.out.print("Ravi");
+				
 			}
+			
 			if(collegeCap.equalsIgnoreCase(college)) {
+				
 				WriteResultExcel.writeResult(getRoll,name,number,final_res, college);
 				System.out.println(getRoll+" "+name+" "+number+" "+final_res+" "+college);
 				driver.navigate().back();
@@ -45,11 +48,10 @@ public class FetchResult {
 				temp=10;
 			}
 			
-			
 		}
 		catch(Exception e) {
 			driver.navigate().back();
-			temp++;;
+			temp++;
 		}
 	}
 

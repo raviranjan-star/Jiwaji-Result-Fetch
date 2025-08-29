@@ -15,22 +15,13 @@ public class RunTest {
 	
 	@Test
 	public static void run() throws InterruptedException {
+		Properties properties;
 		ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");  // headless mode
         options.addArguments("--window-size=1920,1080"); // optional
         options.addArguments("--disable-gpu");
 		WebDriver driver = new ChromeDriver(options);
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		driver.get("https://univindia.com/JwgResult/view-marksheet.php");
-		Select sel=new Select(driver.findElement(By.xpath("//Select[@id='years']")));
-		sel.selectByVisibleText("2025");
-		driver.findElement(By.xpath("//button[text()=' Proceed for Result']")).click();
-		WebElement element= driver.findElement(By.xpath("//tr/td[text()='BED2']/parent::tr/td/form"));
-		JavascriptExecutor js = (JavascriptExecutor) driver;
-		js.executeScript("arguments[0].scrollIntoView(true);", element);
-		Thread.sleep(500);
-		element.click();
-		Properties properties;
 		String rangeRoll = null;
 		
 		try {
@@ -38,6 +29,18 @@ public class RunTest {
             properties = new Properties();
             properties.load(fis);
             rangeRoll = properties.getProperty("RollN0") ;
+            String url_website = properties.getProperty("Website");
+            driver.get(url_website);
+    		Select sel=new Select(driver.findElement(By.xpath("//Select[@id='years']")));
+    		String exam_year = properties.getProperty("year");
+    		sel.selectByVisibleText(exam_year);
+    		driver.findElement(By.xpath("//button[text()=' Proceed for Result']")).click();
+    		String course_string = "//tr/td[text()='"+properties.getProperty("course")+"']/parent::tr/td/form";
+    		WebElement element= driver.findElement(By.xpath(course_string));
+    		JavascriptExecutor js = (JavascriptExecutor) driver;
+    		js.executeScript("arguments[0].scrollIntoView(true);", element);
+    		Thread.sleep(1000);
+    		element.click();
             }catch (IOException e) {
             	e.printStackTrace();
         		}
